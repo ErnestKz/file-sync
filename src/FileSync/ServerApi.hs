@@ -18,16 +18,24 @@ import           Servant
 import           Servant.API
 import           Servant.Server
 
+import           Control.Monad.IO.Class   (MonadIO (liftIO))
 import           Data.Text
 import           Data.Time                (UTCTime)
 
 -- type UserAPI = "Message" :> QueryParam "Message" ClientMessage :> Get '[JSON] [ServerMessage]
 -- type SyncApi = ClientMessage :> Get '[JSON] ServerMessage
 -- type SyncApi =  Get '[JSON] ServerMessage
-type SyncApi =  Get '[JSON] ClientMessage
+type SyncApi = ReqBody '[JSON] ClientMessage :> Get '[JSON] ServerMessage
 
+messageHandler :: ClientMessage -> Handler ServerMessage
+messageHandler (ClientCheckForUpdates timeStamps) = return $ ServerInformUpdates []
+messageHandler (ClientRequestFile fileName)       = return $ ServerSendFile "yourfile" "sike"
+messageHandler (ClientSendUpdate fileName fileContents) = liftIO (print "poo") >>
+                                                          return (ServerAckUpdateRequest "Done")
+
+-- https://docs.servant.dev/en/stable/tutorial/Server.html
 server :: Server SyncApi
-server = return a
+server = messageHandler
 
 -- boilerplate to guide the type inferrence
 syncApi :: Proxy SyncApi

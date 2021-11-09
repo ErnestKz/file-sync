@@ -18,19 +18,22 @@ type FileName = T.Text
 type FileContents = T.Text
 
 data ClientMessage =
-  ClientCheckForUpdates { timeStamps :: [TimeStamp] } |
-  ClientSendUpdate
-  { clientFileName     :: FileName
-  , clientFileContents :: FileContents
-  } deriving (Show, Generic, ToJSON, FromJSON)
+  ClientCheckForUpdates { timeStamps :: [(FileName, TimeStamp)] }
+  | ClientSendUpdate
+    { clientFileName     :: FileName
+    , clientFileContents :: FileContents }
+  | ClientRequestFile
+    { clientFileName     :: FileName
+    } deriving (Show, Generic, ToJSON, FromJSON)
 
 data ServerMessage =
-  ServerSendUpdate
+  ServerSendFile
   { serverFileName     :: FileName
-  , serverFileContents :: FileContents } |
-  ServerInformUpdates
-  { fileUpdatesAvailable :: [ (FileName, TimeStamp) ]
-  } deriving (Show, Generic, ToJSON, FromJSON)
+  , serverFileContents :: FileContents }
+  | ServerInformUpdates
+    { fileUpdatesAvailable :: [ (FileName, TimeStamp) ] }
+  | ServerAckUpdateRequest T.Text
+  deriving (Show, Generic, ToJSON, FromJSON)
 
 a :: ClientMessage
 a = ClientSendUpdate "hello" "hello"
@@ -40,3 +43,7 @@ c :: Maybe ClientMessage
 c = A.decode b
 d :: Either String ClientMessage
 d = A.eitherDecode b
+
+
+a' :: ServerMessage
+a' = ServerSendFile "hello" "hello"
