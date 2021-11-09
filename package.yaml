@@ -1,0 +1,35 @@
+name: file-sync
+version: 0.1.0
+extra-source-files:
+  - readme.md
+ghc-options: -Wall
+
+dependencies:
+  - base
+  - text
+  - aeson
+  - bytestring
+  - time
+  - servant
+  - servant-server
+  - wai
+  - warp
+
+# library:
+#   source-dirs: src
+#   exposed-modules:
+#     - FileSync.Messages
+#     - FileSync.ServerApi
+
+source-dirs:
+  - src
+  
+executables:
+  server:
+    main: server.hs
+    source-dirs: app
+
+  client:
+    main: client.hs
+    source-dirs: app
+
