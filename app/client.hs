@@ -1,4 +1,6 @@
 module Main (main) where
 
+import           FileSync.QueryApi
+
 main :: IO ()
-main = print "pu"
+main = run

@@ -26,6 +26,9 @@ data ClientMessage =
     { clientFileName     :: FileName
     } deriving (Show, Generic, ToJSON, FromJSON)
 
+requestFile :: FileName -> ClientMessage
+requestFile = ClientRequestFile
+
 data ServerMessage =
   ServerSendFile
   { serverFileName     :: FileName

@@ -8,7 +8,7 @@
 {-# LANGUAGE ScopedTypeVariables        #-}
 {-# LANGUAGE TypeOperators              #-}
 
-module FileSync.ServerApi (serverRun) where
+module FileSync.ServerApi (serverRun, syncApi) where
 
 import           FileSync.Messages
 

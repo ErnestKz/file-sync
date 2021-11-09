@@ -14,7 +14,9 @@ dependencies:
   - servant-server
   - wai
   - warp
-
+  - http-client
+  - servant-client
+  
 # library:
 #   source-dirs: src
 #   exposed-modules:

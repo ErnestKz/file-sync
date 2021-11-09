@@ -14,6 +14,7 @@ executable client
   main-is: client.hs
   other-modules:
       FileSync.Messages
+      FileSync.QueryApi
       FileSync.ServerApi
       Paths_file_sync
   hs-source-dirs:
@@ -24,7 +25,9 @@ executable client
       aeson
     , base
     , bytestring
+    , http-client
     , servant
+    , servant-client
     , servant-server
     , text
     , time
@@ -36,6 +39,7 @@ executable server
   main-is: server.hs
   other-modules:
       FileSync.Messages
+      FileSync.QueryApi
       FileSync.ServerApi
       Paths_file_sync
   hs-source-dirs:
@@ -46,7 +50,9 @@ executable server
       aeson
     , base
     , bytestring
+    , http-client
     , servant
+    , servant-client
     , servant-server
     , text
     , time
