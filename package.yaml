@@ -16,12 +16,8 @@ dependencies:
   - warp
   - http-client
   - servant-client
-  
-# library:
-#   source-dirs: src
-#   exposed-modules:
-#     - FileSync.Messages
-#     - FileSync.ServerApi
+  - filepath
+  - directory
 
 source-dirs:
   - src

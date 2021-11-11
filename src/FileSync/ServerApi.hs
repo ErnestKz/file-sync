@@ -15,12 +15,8 @@ import           FileSync.Messages
 import           Network.Wai
 import           Network.Wai.Handler.Warp
 import           Servant
-import           Servant.API
-import           Servant.Server
 
 import           Control.Monad.IO.Class   (MonadIO (liftIO))
-import           Data.Text
-import           Data.Time                (UTCTime)
 
 -- type UserAPI = "Message" :> QueryParam "Message" ClientMessage :> Get '[JSON] [ServerMessage]
 -- type SyncApi = ClientMessage :> Get '[JSON] ServerMessage
@@ -29,10 +25,10 @@ type SyncApi = ReqBody '[JSON] ClientMessage :> Get '[JSON] ServerMessage
 
 messageHandler :: ClientMessage -> Handler ServerMessage
 messageHandler (ClientCheckForUpdates timeStamps) = return $ ServerInformUpdates []
-messageHandler (ClientRequestFile fileName)       = return $ ServerSendFile "yourfile" "sike"
-messageHandler (ClientSendUpdate fileName fileContents) = liftIO (print "poo") >>
-                                                          return (ServerAckUpdateRequest "Done")
-
+messageHandler (ClientRequestFile fileName)       = do fileContents <- liftIO (readFile fileName)
+                                                       return (ServerSendFile fileName fileContents)
+messageHandler (ClientSendUpdate fileName fileContents) = liftIO (writeFile fileName fileContents) >>
+                                                          return (ServerAckUpdateRequest "Updated")
 -- https://docs.servant.dev/en/stable/tutorial/Server.html
 server :: Server SyncApi
 server = messageHandler

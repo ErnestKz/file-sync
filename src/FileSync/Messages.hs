@@ -14,8 +14,8 @@ import qualified Data.Text            as T
 import           GHC.Generics         (Generic)
 
 type TimeStamp = Int
-type FileName = T.Text
-type FileContents = T.Text
+type FileName = String
+type FileContents = String
 
 data ClientMessage =
   ClientCheckForUpdates { timeStamps :: [(FileName, TimeStamp)] }
@@ -47,6 +47,6 @@ c = A.decode b
 d :: Either String ClientMessage
 d = A.eitherDecode b
 
-
 a' :: ServerMessage
 a' = ServerSendFile "hello" "hello"
+

@@ -5,31 +5,23 @@
 module FileSync.QueryApi where
 
 import           FileSync.Messages
-import           FileSync.ServerApi       (syncApi)
+import           FileSync.ServerApi  (syncApi)
 
-import           Data.Aeson
-import           Data.Proxy
-import           GHC.Generics
-import           Network.HTTP.Client      (defaultManagerSettings, newManager)
-import           Servant.API
+import           Network.HTTP.Client (defaultManagerSettings, newManager)
 import           Servant.Client
-import           Servant.Types.SourceT    (foreach)
-
-import qualified Servant.Client.Streaming as S
 
 clientMessage :: ClientMessage -> ClientM ServerMessage
 clientMessage = client syncApi
 
-query :: ClientM ServerMessage
-query = do
-  r <- clientMessage a
-  return r
+handleServerMessage :: ServerMessage -> IO ()
+handleServerMessage (ServerSendFile fileName fileContents) = writeFile fileName fileContents
+handleServerMessage (ServerInformUpdates updates)          = print updates
+handleServerMessage (ServerAckUpdateRequest updateAck)     = print updateAck
 
-run :: IO ()
-run = do
+runCommand :: ClientMessage -> IO ()
+runCommand query = do
   manager' <- newManager defaultManagerSettings
-  res <- runClientM query (mkClientEnv manager' (BaseUrl Http "localhost" 8081 ""))
+  res <- runClientM (clientMessage query) (mkClientEnv manager' (BaseUrl Http "localhost" 8081 ""))
   case res of
     Left err -> putStrLn $ "Error: " ++ show err
-    Right s -> do
-      print s
+    Right m  -> handleServerMessage m

@@ -5,7 +5,6 @@ in
 mkShell {
   inputsFrom = [ drv.env ];
   buildInputs = [
-    
     hpack
     cabal2nix
     niv
